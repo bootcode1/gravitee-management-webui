@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-class PortalService {
-  private portalURL: string;
-  private Constants: any;
-
-  constructor(private $http, Constants) {
+const IdentityProviderGraviteeioAmComponent: ng.IComponentOptions = {
+  bindings: {
+    identityProvider: '<'
+  },
+  template: require('./identity-provider-graviteeio-am.html'),
+  controller: function(
+  ) {
     'ngInject';
-    this.portalURL = `${Constants.baseURL}portal/`;
-    this.Constants = Constants;
-  }
 
-  searchApis(query?: string) {
-    let url = this.portalURL + 'apis/_search?q=' + query;
-    return this.$http.post(url);
+    this.buttonConfig = {};
+    this.buttonConfig.backgroundOptions = {
+      label: 'Text Background',
+      icon: 'font_download',
+      default: '#34A0D4',
+      hasBackdrop: true,
+      clickOutsideToClose: true,
+      random: true,
+      openOnInput: true,
+      alphaChannel: false,
+      genericPalette: false,
+      history: false
+    };
   }
+};
 
-  listSocialIdentityProviders() {
-    return this.$http.get(this.portalURL + 'identities');
-  }
-}
-
-export default PortalService;
+export default IdentityProviderGraviteeioAmComponent;

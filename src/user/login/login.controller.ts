@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import AuthenticationService from '../../services/authentication.service';
 import UserService from '../../services/user.service';
 import {IScope} from 'angular';
 import { StateService } from '@uirouter/core';
 import { User } from "../../entities/user";
 import RouterService from "../../services/router.service";
+import * as _ from 'lodash';
+import { AuthProvider, SatellizerConfig } from "satellizer";
+import { IdentityProvider } from "../../entities/identityProvider";
 
 class LoginController {
   user: any = {};
@@ -32,23 +34,46 @@ class LoginController {
   }[];
 
   constructor(
+    private $auth: AuthProvider,
+    private SatellizerConfig: SatellizerConfig,
     private UserService: UserService,
     private $state: StateService,
-    Constants,
+    private Constants,
     private $rootScope: IScope,
-    private AuthenticationService: AuthenticationService,
-    private RouterService: RouterService
+    private RouterService: RouterService,
+    private identityProviders
   ) {
     'ngInject';
     this.userCreationEnabled = Constants.portal.userCreation.enabled;
     this.localLoginDisabled = (!Constants.authentication.localLogin.enabled) || false;
     this.$state = $state;
     this.$rootScope = $rootScope;
-    this.providers = AuthenticationService.getProviders();
   }
 
-  authenticate(provider: string) {
-    this.AuthenticationService.authenticate(provider)
+  authenticate(identityProvider: string) {
+    let provider = _.find(this.identityProviders, {'id': identityProvider}) as IdentityProvider;
+    provider.type = (provider.type === 'oidc') ? 'oauth2' : provider.type;
+
+    let satellizerProvider = this.SatellizerConfig.providers[provider.type];
+    if (!satellizerProvider) {
+      satellizerProvider = _.merge(provider, {
+        oauthType: '2.0',
+        requiredUrlParams: ['scope'],
+        scopeDelimiter: ' ',
+        scope: provider.scopes
+      });
+    } else {
+      _.merge(satellizerProvider, provider);
+    }
+
+    this.SatellizerConfig.providers[provider.type] = _.merge(satellizerProvider, {
+      url: this.Constants.baseURL + 'auth/oauth2/' + provider.id,
+      redirectUri: window.location.origin + (window.location.pathname == '/' ? '' : window.location.pathname),
+    });
+
+    console.log(this.SatellizerConfig.providers[provider.type]);
+
+    this.$auth.authenticate(provider.type)
       .then( () => {
         this.UserService.current().then( (user) => {
           this.loginSuccess(user);
@@ -72,7 +97,7 @@ class LoginController {
     this.$rootScope.$broadcast('graviteeUserRefresh', {'user' : user});
 
     let route = this.RouterService.getLastRoute();
-    if (route.from && route.from.name !== '' && route.from.name !== 'logout') {
+    if (route.from && route.from.name !== '' && route.from.name !== 'logout' && route.from.name !== 'confirm') {
       this.$state.go(route.from.name, route.fromParams);
     } else {
       this.$state.go('portal.home');

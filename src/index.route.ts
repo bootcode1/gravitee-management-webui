@@ -18,6 +18,8 @@ import { User } from './entities/user';
 import {IScope} from 'angular';
 import { StateService } from '@uirouter/core';
 import {StateProvider, UrlService} from "@uirouter/angularjs";
+import PortalService from "./services/portal.service";
+import InstancesService from "./services/instances.service";
 
 function routerConfig($stateProvider: StateProvider, $urlServiceProvider: UrlService) {
   'ngInject';
@@ -92,7 +94,8 @@ function routerConfig($stateProvider: StateProvider, $urlServiceProvider: UrlSer
           if (UserService.currentUser && UserService.currentUser.id) {
             $state.go('portal.home');
           }
-        }
+        },
+        identityProviders: (PortalService: PortalService) => PortalService.listSocialIdentityProviders().then(response => response.data)
       }
     })
     .state('registration', {

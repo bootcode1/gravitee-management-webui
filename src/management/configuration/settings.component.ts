@@ -32,6 +32,11 @@ const SettingsComponent: ng.IComponentOptions = {
     this.$state = $state;
     this.settingsMenu = {
       // PORTAL
+      identityProviders: {
+        perm: UserService.isUserHasPermissions(
+          ['portal-identity_provider-c', 'portal-identity_provider-r', 'portal-identity_provider-u', 'portal-identity_provider-d']),
+        goTo: 'management.settings.identityproviders.list'
+      },
       documentations: {
         perm: UserService.isUserHasPermissions(
           ['portal-documentation-c', 'portal-documentation-u', 'portal-documentation-d']),

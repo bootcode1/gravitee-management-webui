@@ -13,25 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-class PortalService {
-  private portalURL: string;
-  private Constants: any;
-
-  constructor(private $http, Constants) {
-    'ngInject';
-    this.portalURL = `${Constants.baseURL}portal/`;
-    this.Constants = Constants;
-  }
-
-  searchApis(query?: string) {
-    let url = this.portalURL + 'apis/_search?q=' + query;
-    return this.$http.post(url);
-  }
-
-  listSocialIdentityProviders() {
-    return this.$http.get(this.portalURL + 'identities');
-  }
+export class GroupMapping {
+  public condition: string;
+  public groups: string[];
 }
 
-export default PortalService;
+export class RoleMapping {
+  public condition: string;
+  public portal: string;
+  public management: string;
+}
+
+export class UserMapping {
+  public target: string;
+  public origin: string;
+}
+
+export class IdentityProvider {
+  public id: string;
+  public name: string;
+  public description: string;
+  public enabled: boolean;
+  public type: string;
+  public configuration: Map<string, any>;
+  public groupMappings: GroupMapping[];
+  public roleMappings: RoleMapping[];
+  public userProfileMapping: Map<string, string>;
+
+  constructor() {
+    'ngInject';
+  }
+}

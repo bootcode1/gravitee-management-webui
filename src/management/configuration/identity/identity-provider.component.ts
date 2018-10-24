@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const IdentityProviderComponent: ng.IComponentOptions = {
+  bindings: {
+    identityProvider: '<',
+    groups: '<',
+    portalRoles: '<',
+    managementRoles: '<'
+  },
+  controller: 'IdentityProviderController',
+  template: require('./identity-provider.html')
+};
 
-import { AuthProvider } from 'satellizer';
-
-function authenticationConfig ($authProvider: AuthProvider) {
-  'ngInject';
-
-  $authProvider.withCredentials = true;
-}
-
-export default authenticationConfig;
+export default IdentityProviderComponent;

@@ -28,6 +28,10 @@
                 <strong>Portal</strong>
             </div>
             <ul class="aui-nav">
+              <li class="iterable-item" ui-sref-active="aui-nav-selected"
+                  ng-if="$ctrl.settingsMenu.portalSettings.perm">
+                <a class="execute" ui-sref="{{$ctrl.settingsMenu.identityProviders.goTo}}">Authentication</a>
+              </li>
                 <li class="iterable-item" ui-sref-active="aui-nav-selected"
                     ng-if="$ctrl.settingsMenu.documentations.perm">
                     <a class="execute" ui-sref="{{$ctrl.settingsMenu.documentations.goTo}}">Documentation</a>

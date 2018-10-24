@@ -53,6 +53,10 @@ const UserDetailComponent: ng.IComponentOptions = {
       $scope.userApplications = [];
     };
 
+    this.getUserPicture = () => {
+      return UserService.getUserAvatar(this.selectedUser.id);
+    };
+
     this.remove = (ev: Event, group: any) => {
       ev.stopPropagation();
       $mdDialog.show({

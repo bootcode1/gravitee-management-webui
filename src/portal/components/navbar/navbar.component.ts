@@ -18,7 +18,6 @@ import TaskService from "../../../services/task.service";
 import {IIntervalService, IScope} from "angular";
 import {PagedResult} from "../../../entities/pagedResult";
 import UserNotificationService from "../../../services/userNotification.service";
-import AuthenticationService from '../../../services/authentication.service';
 import { StateService } from '@uirouter/core';
 
 export const NavbarComponent: ng.IComponentOptions = {
@@ -32,8 +31,8 @@ export const NavbarComponent: ng.IComponentOptions = {
     $rootScope: IScope,
     $state: StateService,
     $transitions,
-    $interval: IIntervalService,
-    AuthenticationService: AuthenticationService
+    $interval: IIntervalService
+//    AuthenticationService: AuthenticationService
   ) {
     'ngInject';
 
@@ -42,7 +41,7 @@ export const NavbarComponent: ng.IComponentOptions = {
     vm.$rootScope = $rootScope;
     vm.displayContextualDocumentationButton = false;
     vm.visible = true;
-    vm.providers = AuthenticationService.getProviders();
+    //vm.providers = AuthenticationService.getProviders();
     vm.localLoginDisabled = (!Constants.authentication.localLogin.enabled) || false;
 
     $scope.$on('graviteeUserRefresh', (event, {user, refresh}) => {
@@ -84,6 +83,7 @@ export const NavbarComponent: ng.IComponentOptions = {
         !trans.to().name.startsWith('support') &&
         !trans.to().name.startsWith('login') &&
         !trans.to().name.startsWith('registration') &&
+        !trans.to().name.startsWith('confirm') &&
         !trans.to().name.startsWith('user');
 
       let forceLogin = Constants.authentication.forceLogin.enabled || false;
@@ -141,6 +141,8 @@ export const NavbarComponent: ng.IComponentOptions = {
     };
 
     vm.authenticate = function(provider: string) {
+      //TODO: david
+      /*
       AuthenticationService.authenticate(provider)
         .then( () => {
           UserService.current().then( (user) => {
@@ -148,9 +150,11 @@ export const NavbarComponent: ng.IComponentOptions = {
           });
         })
         .catch( () => {});
+        */
     };
 
-    vm.isOnlyOAuth = vm.localLoginDisabled && vm.providers.length == 1;
+    // TODO: david: check that there are enabled auth provider
+    vm.isOnlyOAuth = vm.localLoginDisabled; // && vm.providers.length == 1;
 
   }
 };

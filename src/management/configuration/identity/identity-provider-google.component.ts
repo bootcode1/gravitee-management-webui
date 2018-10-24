@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const IdentityProviderGoogleComponent: ng.IComponentOptions = {
+  bindings: {
+    identityProvider: '<'
+  },
+  template: require('./identity-provider-google.html')
+};
 
-import { AuthProvider } from 'satellizer';
-
-function authenticationConfig ($authProvider: AuthProvider) {
-  'ngInject';
-
-  $authProvider.withCredentials = true;
-}
-
-export default authenticationConfig;
+export default IdentityProviderGoogleComponent;

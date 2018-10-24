@@ -14,12 +14,29 @@
  * limitations under the License.
  */
 
-import { AuthProvider } from 'satellizer';
+const IdentityProviderOIDCComponent: ng.IComponentOptions = {
+  bindings: {
+    identityProvider: '<'
+  },
+  template: require('./identity-provider-oidc.html'),
+  controller: function(
+  ) {
+    'ngInject';
 
-function authenticationConfig ($authProvider: AuthProvider) {
-  'ngInject';
+    this.buttonConfig = {};
+    this.buttonConfig.backgroundOptions = {
+      label: 'Text Background',
+      icon: 'font_download',
+      default: '#34A0D4',
+      hasBackdrop: true,
+      clickOutsideToClose: true,
+      random: true,
+      openOnInput: true,
+      alphaChannel: false,
+      genericPalette: false,
+      history: false
+    };
+  }
+};
 
-  $authProvider.withCredentials = true;
-}
-
-export default authenticationConfig;
+export default IdentityProviderOIDCComponent;
